@@ -1,0 +1,51 @@
+﻿@model Matrix.Models.MatrixViewModel
+
+@if (Model != null)
+{
+
+    <table class="table table-bordered">
+        @for (int i = 0; i < Model.Matrix.GetLength(0); i++)
+        {
+            <tr>
+                @for (int j = 0; j < Model.Matrix.GetLength(1); j++)
+                {
+                    <td>
+                        @Model.Matrix[i, j]
+                    </td>
+                }
+            </tr>
+        }
+    </table>
+}
+
+<div class="row">
+    <div class="col-md-3">
+        @using (Html.BeginForm("Load", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <input type="file" name="postedFile" />
+            <input id="submitFile" class="btn btn-primary" type="submit" value="Import" disabled />
+        }
+    </div>
+    <div class="col-md-3">
+        @using (Html.BeginForm("GenerateRandom", "Home", FormMethod.Post))
+        {
+            <input type="number" name="size" min="2" max="10" />
+            <input class="btn btn-primary" type="submit" value="Generate" />
+        }
+    </div>
+    <div class="col-md-3">
+        @Html.ActionLink("Transpose", "Transpose", new { flattened = string.Join(",", Model.Flattened), size = Model.Size }, new { @class = "btn btn-primary" })
+    </div>
+    <div class="col-md-3">
+        <button id="btn_export" class="btn btn-primary">Export</button>
+
+    </div>
+</div>
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+<script src="~/Scripts/matrix.js"></script>
+
+<script>
+    window.matrix = {};
+    window.matrix.flattened = @Html.Raw(Json.Encode(Model.Flattened));
+    window.matrix.size = @Model.Size;
+</script>
